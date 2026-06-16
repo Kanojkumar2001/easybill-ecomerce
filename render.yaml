@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: easybill-backend
+    env: node
+    branch: main
+    plan: free
+    region: oregon
+    root: backend
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    healthCheckPath: /
