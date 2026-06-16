@@ -6,6 +6,6 @@ services:
     plan: free
     region: oregon
     root: backend
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    buildCommand: npm install
+    startCommand: npm start
     healthCheckPath: /
