@@ -21,9 +21,14 @@
 3. Start Command: `npm start`
 4. Environment variables:
    - `MONGODB_URI` = your Atlas connection string
+     - Example: `mongodb+srv://<user>:<pass>@cluster0.mongodb.net/easybill?retryWrites=true&w=majority`
    - `JWT_SECRET` = strong secret
    - `NODE_ENV` = `production` (optional)
 5. Deploy.
+
+> If Render cannot connect to MongoDB, your app will fall back to the default local string in `backend/config/db.js`, which causes `connect ECONNREFUSED 127.0.0.1:27017`.
+>
+> That means Render has not received a valid `MONGODB_URI` environment variable.
 
 ## Common pitfalls
 
