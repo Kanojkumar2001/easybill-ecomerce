@@ -12,6 +12,8 @@ function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [role, setRole] = useState("admin");
   const [err, setErr] = useState("");
 
   const submit = async (e: React.FormEvent) => {
@@ -19,7 +21,7 @@ function RegisterPage() {
     if (!name || !email || !pass) return;
     try {
       setErr("");
-      const data = await api.auth.register(name, email, pass);
+      const data = await api.auth.register(name, email, pass, role, mobile);
       localStorage.setItem("eb_user", JSON.stringify(data));
       nav({ to: "/dashboard" });
     } catch (error: any) {
@@ -42,22 +44,44 @@ function RegisterPage() {
         )}
         <div className="eb-form-row">
           <label className="eb-label">Full name</label>
-          <input className="eb-input" value={name} onChange={(e) => setName(e.target.value)} />
+          <input className="eb-input" required value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="eb-form-row">
           <label className="eb-label">Email</label>
           <input
             className="eb-input"
             type="email"
+            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+        </div>
+        <div className="eb-form-row">
+          <label className="eb-label">Mobile Number</label>
+          <input
+            className="eb-input"
+            type="tel"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+          />
+        </div>
+        <div className="eb-form-row">
+          <label className="eb-label">I am registering as</label>
+          <select
+            className="eb-select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="admin">Business Owner (Admin)</option>
+            <option value="customer">Client (Customer)</option>
+          </select>
         </div>
         <div className="eb-form-row">
           <label className="eb-label">Password</label>
           <input
             className="eb-input"
             type="password"
+            required
             value={pass}
             onChange={(e) => setPass(e.target.value)}
           />

@@ -4,8 +4,12 @@ import Expense from "../models/Expense.js";
 // @route   GET /api/expenses
 // @access  Private
 export const getExpenses = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized to access expenses" });
+  }
+
   try {
-    const expenses = await Expense.find({ user: req.user._id }).sort({ date: -1, createdAt: -1 });
+    const expenses = await Expense.find({ user: req.businessId }).sort({ date: -1, createdAt: -1 });
     res.json(expenses);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -16,11 +20,15 @@ export const getExpenses = async (req, res) => {
 // @route   POST /api/expenses
 // @access  Private
 export const createExpense = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized to access expenses" });
+  }
+
   const { date, category, amount, note } = req.body;
 
   try {
     const expense = new Expense({
-      user: req.user._id,
+      user: req.businessId,
       date,
       category,
       amount,
@@ -38,8 +46,12 @@ export const createExpense = async (req, res) => {
 // @route   DELETE /api/expenses/:id
 // @access  Private
 export const deleteExpense = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized to access expenses" });
+  }
+
   try {
-    const expense = await Expense.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+    const expense = await Expense.findOneAndDelete({ _id: req.params.id, user: req.businessId });
 
     if (expense) {
       res.json({ message: "Expense removed" });

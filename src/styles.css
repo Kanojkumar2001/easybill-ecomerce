@@ -542,3 +542,108 @@ table.eb-table {
   text-align: center;
   color: var(--c-text-muted);
 }
+
+/* Role-based custom themes */
+.eb-platform-admin {
+  --c-primary: #1e3a8a;
+  --c-primary-2: #3b82f6;
+  --c-primary-soft: #e8eefc;
+}
+.eb-platform-employee {
+  --c-primary: #0f766e;
+  --c-primary-2: #0d9488;
+  --c-primary-soft: #f0fdfa;
+}
+.eb-platform-customer {
+  --c-primary: #047857;
+  --c-primary-2: #10b981;
+  --c-primary-soft: #ecfdf5;
+}
+
+/* Sidebar background themes */
+.eb-platform-admin .eb-sidebar {
+  background: linear-gradient(180deg, #1e1b4b 0%, #4338ca 100%);
+}
+.eb-platform-employee .eb-sidebar {
+  background: linear-gradient(180deg, #0d3b3f 0%, #0f766e 100%);
+}
+.eb-platform-customer .eb-sidebar {
+  background: linear-gradient(180deg, #064e3b 0%, #047857 100%);
+}
+
+.eb-platform-admin .eb-nav a.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-left-color: #818cf8;
+}
+.eb-platform-employee .eb-nav a.active {
+  background: rgba(13, 148, 136, 0.2);
+  border-left-color: #2dd4bf;
+}
+.eb-platform-customer .eb-nav a.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-left-color: #34d399;
+}
+
+/* Storefront styles */
+.eb-store-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.eb-product-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.eb-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.eb-product-img {
+  height: 140px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  border-bottom: 1px solid var(--c-border);
+}
+.eb-product-body {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.eb-product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.eb-product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+.eb-product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--c-primary);
+  margin-top: auto;
+  margin-bottom: 0.75rem;
+}
+.eb-product-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: auto;
+}
+.eb-qty-input {
+  width: 70px;
+}
+

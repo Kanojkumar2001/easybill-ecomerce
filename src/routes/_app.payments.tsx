@@ -30,16 +30,35 @@ function PaymentsPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    Promise.all([api.payments.list(), api.invoices.list()])
-      .then(([pays, invs]) => {
+    const u = localStorage.getItem("eb_user");
+    if (u) {
+      try {
+        setUser(JSON.parse(u));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  const role = user?.role || "admin";
+
+  useEffect(() => {
+    const fetches = [api.payments.list()];
+    if (role !== "customer") {
+      fetches.push(api.invoices.list());
+    }
+
+    Promise.all(fetches)
+      .then(([pays, invs = []]) => {
         setRows(pays);
         setInvoices(invs);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [role]);
 
   const invMap = useMemo(
     () => Object.fromEntries(invoices.map((i) => [i._id, i])),
@@ -72,9 +91,11 @@ function PaymentsPage() {
           Total received:{" "}
           <strong>{fmtINR(rows.reduce((s, p) => s + p.amount, 0))}</strong>
         </div>
-        <button className="eb-btn eb-btn-primary" onClick={() => setOpen(true)}>
-          + Record Payment
-        </button>
+        {role !== "customer" && (
+          <button className="eb-btn eb-btn-primary" onClick={() => setOpen(true)}>
+            + Record Payment
+          </button>
+        )}
       </div>
       <div className="eb-card">
         <div className="eb-table-wrap">

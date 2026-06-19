@@ -33,11 +33,11 @@ export const api = {
       });
       return handleResponse(res);
     },
-    register: async (name: string, email: string, pass: string) => {
+    register: async (name: string, email: string, pass: string, role?: string, mobile?: string) => {
       const res = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password: pass }),
+        body: JSON.stringify({ name, email, password: pass, role, mobile }),
       });
       return handleResponse(res);
     },
@@ -222,6 +222,57 @@ export const api = {
       const res = await fetch(`${API_URL}/reports/profit?from=${from || ""}&to=${to || ""}`, {
         headers: getHeaders(),
       });
+      return handleResponse(res);
+    },
+  },
+  settings: {
+    updateProfile: async (name: string, email: string, mobile: string) => {
+      const res = await fetch(`${API_URL}/auth/profile`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify({ name, email, mobile }),
+      });
+      return handleResponse(res);
+    },
+    changePassword: async (currentPassword: string, newPassword: string) => {
+      const res = await fetch(`${API_URL}/auth/password`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      return handleResponse(res);
+    },
+  },
+  employees: {
+    list: async () => {
+      const res = await fetch(`${API_URL}/employees`, { headers: getHeaders() });
+      return handleResponse(res);
+    },
+    create: async (employee: any) => {
+      const res = await fetch(`${API_URL}/employees`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(employee),
+      });
+      return handleResponse(res);
+    },
+    update: async (id: string, employee: any) => {
+      const res = await fetch(`${API_URL}/employees/${id}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(employee),
+      });
+      return handleResponse(res);
+    },
+    delete: async (id: string) => {
+      const res = await fetch(`${API_URL}/employees/${id}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
+      return handleResponse(res);
+    },
+    activities: async () => {
+      const res = await fetch(`${API_URL}/employees/activities`, { headers: getHeaders() });
       return handleResponse(res);
     },
   },

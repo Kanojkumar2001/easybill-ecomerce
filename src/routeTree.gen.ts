@@ -15,12 +15,14 @@ import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppTaxesRouteImport } from './routes/_app.taxes'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppQuotationsRouteImport } from './routes/_app.quotations'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
 import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppExpensesRouteImport } from './routes/_app.expenses'
+import { Route as AppEmployeesRouteImport } from './routes/_app.employees'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCustomersRouteImport } from './routes/_app.customers'
 
@@ -53,6 +55,11 @@ const AppTaxesRoute = AppTaxesRouteImport.update({
   path: '/taxes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -83,6 +90,11 @@ const AppExpensesRoute = AppExpensesRouteImport.update({
   path: '/expenses',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEmployeesRoute = AppEmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -101,12 +113,14 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
+  '/employees': typeof AppEmployeesRoute
   '/expenses': typeof AppExpensesRoute
   '/invoices': typeof AppInvoicesRoute
   '/payments': typeof AppPaymentsRoute
   '/products': typeof AppProductsRoute
   '/quotations': typeof AppQuotationsRoute
   '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
   '/taxes': typeof AppTaxesRoute
 }
 export interface FileRoutesByTo {
@@ -116,12 +130,14 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
+  '/employees': typeof AppEmployeesRoute
   '/expenses': typeof AppExpensesRoute
   '/invoices': typeof AppInvoicesRoute
   '/payments': typeof AppPaymentsRoute
   '/products': typeof AppProductsRoute
   '/quotations': typeof AppQuotationsRoute
   '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
   '/taxes': typeof AppTaxesRoute
 }
 export interface FileRoutesById {
@@ -133,12 +149,14 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/_app/customers': typeof AppCustomersRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/employees': typeof AppEmployeesRoute
   '/_app/expenses': typeof AppExpensesRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/payments': typeof AppPaymentsRoute
   '/_app/products': typeof AppProductsRoute
   '/_app/quotations': typeof AppQuotationsRoute
   '/_app/reports': typeof AppReportsRoute
+  '/_app/settings': typeof AppSettingsRoute
   '/_app/taxes': typeof AppTaxesRoute
 }
 export interface FileRouteTypes {
@@ -150,12 +168,14 @@ export interface FileRouteTypes {
     | '/register'
     | '/customers'
     | '/dashboard'
+    | '/employees'
     | '/expenses'
     | '/invoices'
     | '/payments'
     | '/products'
     | '/quotations'
     | '/reports'
+    | '/settings'
     | '/taxes'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,12 +185,14 @@ export interface FileRouteTypes {
     | '/register'
     | '/customers'
     | '/dashboard'
+    | '/employees'
     | '/expenses'
     | '/invoices'
     | '/payments'
     | '/products'
     | '/quotations'
     | '/reports'
+    | '/settings'
     | '/taxes'
   id:
     | '__root__'
@@ -181,12 +203,14 @@ export interface FileRouteTypes {
     | '/register'
     | '/_app/customers'
     | '/_app/dashboard'
+    | '/_app/employees'
     | '/_app/expenses'
     | '/_app/invoices'
     | '/_app/payments'
     | '/_app/products'
     | '/_app/quotations'
     | '/_app/reports'
+    | '/_app/settings'
     | '/_app/taxes'
   fileRoutesById: FileRoutesById
 }
@@ -242,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTaxesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/reports': {
       id: '/_app/reports'
       path: '/reports'
@@ -284,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppExpensesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/employees': {
+      id: '/_app/employees'
+      path: '/employees'
+      fullPath: '/employees'
+      preLoaderRoute: typeof AppEmployeesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -304,24 +342,28 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppCustomersRoute: typeof AppCustomersRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppEmployeesRoute: typeof AppEmployeesRoute
   AppExpensesRoute: typeof AppExpensesRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppPaymentsRoute: typeof AppPaymentsRoute
   AppProductsRoute: typeof AppProductsRoute
   AppQuotationsRoute: typeof AppQuotationsRoute
   AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppTaxesRoute: typeof AppTaxesRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppCustomersRoute: AppCustomersRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppEmployeesRoute: AppEmployeesRoute,
   AppExpensesRoute: AppExpensesRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppPaymentsRoute: AppPaymentsRoute,
   AppProductsRoute: AppProductsRoute,
   AppQuotationsRoute: AppQuotationsRoute,
   AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppTaxesRoute: AppTaxesRoute,
 }
 

@@ -35,17 +35,37 @@ function QuotationsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [showNew, setShowNew] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    Promise.all([api.quotations.list(), api.customers.list(), api.products.list()])
-      .then(([qts, custs, prods]) => {
+    const u = localStorage.getItem("eb_user");
+    if (u) {
+      try {
+        setUser(JSON.parse(u));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  const role = user?.role || "admin";
+
+  useEffect(() => {
+    const fetches = [api.quotations.list()];
+    // Customers do not have permission to list other customers or products
+    if (role !== "customer") {
+      fetches.push(api.customers.list(), api.products.list());
+    }
+
+    Promise.all(fetches)
+      .then(([qts, custs = [], prods = []]) => {
         setRows(qts);
         setCustomers(custs);
         setProducts(prods);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [role]);
 
   const getCustomer = (q: Quotation): Customer | undefined => {
     if (typeof q.customer === "object" && q.customer !== null) return q.customer as Customer;
@@ -102,9 +122,11 @@ function QuotationsPage() {
           <strong>{rows.length}</strong>{" "}
           <span style={{ color: "var(--c-text-muted)" }}>quotations</span>
         </div>
-        <button className="eb-btn eb-btn-primary" onClick={() => setShowNew(true)}>
-          + New Quotation
-        </button>
+        {role !== "customer" && (
+          <button className="eb-btn eb-btn-primary" onClick={() => setShowNew(true)}>
+            + New Quotation
+          </button>
+        )}
       </div>
       <div className="eb-card">
         <div className="eb-table-wrap">
@@ -112,7 +134,7 @@ function QuotationsPage() {
             <thead>
               <tr>
                 <th>Quote #</th>
-                <th>Customer</th>
+                <th>{role === "customer" ? "From Business" : "Customer"}</th>
                 <th>Date</th>
                 <th>Total</th>
                 <th>Status</th>
@@ -125,33 +147,65 @@ function QuotationsPage() {
                   <td colSpan={6} className="eb-empty">Loading quotations...</td>
                 </tr>
               )}
-              {!loading && rows.map((q) => (
+              {!loading && rows.map((q: any) => (
                 <tr key={q._id}>
                   <td>
                     <strong>{q.number}</strong>
                   </td>
-                  <td>{getCustomer(q)?.name ?? "—"}</td>
+                  <td>
+                    {role === "customer" 
+                      ? (q.user?.name ?? "—") 
+                      : (getCustomer(q)?.name ?? "—")
+                    }
+                  </td>
                   <td>{q.date}</td>
                   <td>{fmtINR(q.total)}</td>
                   <td>
-                    <select
-                      className="eb-select"
-                      style={{ width: 120, padding: ".25rem .5rem" }}
-                      value={q.status}
-                      onChange={(e) => setStatus(q._id, e.target.value as Quotation["status"])}
-                    >
-                      <option>Draft</option>
-                      <option>Approved</option>
-                      <option>Rejected</option>
-                    </select>
+                    {role === "customer" ? (
+                      q.status === "Draft" ? (
+                        <div style={{ display: "flex", gap: ".25rem" }}>
+                          <button 
+                            className="eb-btn eb-btn-primary eb-btn-sm" 
+                            style={{ background: "var(--c-success)", borderColor: "var(--c-success)", padding: ".15rem .4rem" }}
+                            onClick={() => setStatus(q._id, "Approved")}
+                          >
+                            ✓ Accept
+                          </button>
+                          <button 
+                            className="eb-btn eb-btn-outline eb-btn-sm" 
+                            style={{ color: "var(--c-danger)", borderColor: "var(--c-danger)", padding: ".15rem .4rem" }}
+                            onClick={() => setStatus(q._id, "Rejected")}
+                          >
+                            ✕ Reject
+                          </button>
+                        </div>
+                      ) : (
+                        <span className={`eb-badge ${q.status === "Approved" ? "eb-badge-success" : "eb-badge-danger"}`}>
+                          {q.status}
+                        </span>
+                      )
+                    ) : (
+                      <select
+                        className="eb-select"
+                        style={{ width: 120, padding: ".25rem .5rem" }}
+                        value={q.status}
+                        onChange={(e) => setStatus(q._id, e.target.value as Quotation["status"])}
+                      >
+                        <option>Draft</option>
+                        <option>Approved</option>
+                        <option>Rejected</option>
+                      </select>
+                    )}
                   </td>
                   <td>
-                    <button
-                      className="eb-btn eb-btn-outline eb-btn-sm"
-                      onClick={() => convert(q)}
-                    >
-                      → Convert to Invoice
-                    </button>
+                    {role !== "customer" && (
+                      <button
+                        className="eb-btn eb-btn-outline eb-btn-sm"
+                        onClick={() => convert(q)}
+                      >
+                        → Convert to Invoice
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

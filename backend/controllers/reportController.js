@@ -17,9 +17,13 @@ const dateRangeFilter = (from, to) => {
 // @route   GET /api/reports/sales
 // @access  Private
 export const getSalesReport = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized to view reports" });
+  }
+
   const { from, to } = req.query;
   try {
-    const filter = { user: req.user._id, ...dateRangeFilter(from, to) };
+    const filter = { user: req.businessId, ...dateRangeFilter(from, to) };
     const invoices = await Invoice.find(filter)
       .populate("customer", "name")
       .sort({ date: -1 });
@@ -48,9 +52,13 @@ export const getSalesReport = async (req, res) => {
 // @route   GET /api/reports/payments
 // @access  Private
 export const getPaymentsReport = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized to view reports" });
+  }
+
   const { from, to } = req.query;
   try {
-    const filter = { user: req.user._id, ...dateRangeFilter(from, to) };
+    const filter = { user: req.businessId, ...dateRangeFilter(from, to) };
     const payments = await Payment.find(filter)
       .populate("invoiceId", "number total status")
       .sort({ date: -1 });
@@ -58,7 +66,7 @@ export const getPaymentsReport = async (req, res) => {
     const totalPaid = payments.reduce((s, p) => s + p.amount, 0);
 
     // Calculate pending from invoices in range
-    const invoiceFilter = { user: req.user._id, ...dateRangeFilter(from, to), status: { $ne: "Paid" } };
+    const invoiceFilter = { user: req.businessId, ...dateRangeFilter(from, to), status: { $ne: "Paid" } };
     const pendingInvoices = await Invoice.find(invoiceFilter);
     const totalPending = pendingInvoices.reduce((s, i) => s + i.total, 0);
 
@@ -83,9 +91,13 @@ export const getPaymentsReport = async (req, res) => {
 // @route   GET /api/reports/expenses
 // @access  Private
 export const getExpensesReport = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized to view reports" });
+  }
+
   const { from, to } = req.query;
   try {
-    const filter = { user: req.user._id, ...dateRangeFilter(from, to) };
+    const filter = { user: req.businessId, ...dateRangeFilter(from, to) };
     const expenses = await Expense.find(filter).sort({ date: -1 });
     const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
 
@@ -102,9 +114,13 @@ export const getExpensesReport = async (req, res) => {
 // @route   GET /api/reports/profit
 // @access  Private
 export const getProfitReport = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized to view reports" });
+  }
+
   const { from, to } = req.query;
   try {
-    const userId = req.user._id;
+    const userId = req.businessId;
     const filter = dateRangeFilter(from, to);
 
     const [invoices, expenses] = await Promise.all([

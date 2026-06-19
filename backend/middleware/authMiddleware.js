@@ -13,6 +13,17 @@ export const protect = async (req, res, next) => {
       if (!req.user) {
         return res.status(401).json({ message: "Not authorized, user not found" });
       }
+      if (req.user.isActive === false) {
+        return res.status(403).json({ message: "Not authorized, account is disabled" });
+      }
+      // Set business scoping ID
+      if (req.user.role === "admin") {
+        req.businessId = req.user._id;
+      } else if (req.user.role === "employee") {
+        req.businessId = req.user.adminId;
+      } else {
+        req.businessId = null; // Scoped by customer email/ID
+      }
       next();
     } catch (error) {
       console.error(error);

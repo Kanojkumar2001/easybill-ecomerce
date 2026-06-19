@@ -16,6 +16,27 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      enum: ["admin", "employee", "customer"],
+      default: "admin",
+    },
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    permissions: {
+      type: [String],
+      default: ["read_customers", "create_quotations", "create_invoices", "record_payments"],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    mobile: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
