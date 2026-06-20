@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+    },
     permissions: {
       type: [String],
       default: ["read_customers", "create_quotations", "create_invoices", "record_payments"],

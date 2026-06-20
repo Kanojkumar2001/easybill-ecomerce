@@ -28,6 +28,10 @@ export const createEmployee = async (req, res) => {
 
   const { name, email, password, permissions, mobile } = req.body;
 
+  if (!name || !email || !password || !mobile) {
+    return res.status(400).json({ message: "Name, Email, Password, and Mobile Number are required fields" });
+  }
+
   try {
     const userExists = await User.findOne({ email });
 

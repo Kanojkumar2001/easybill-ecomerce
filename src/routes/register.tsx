@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 
 export const Route = createFileRoute("/register")({
@@ -9,6 +9,10 @@ export const Route = createFileRoute("/register")({
 
 function RegisterPage() {
   const nav = useNavigate();
+  useEffect(() => {
+    nav({ to: "/login" });
+  }, [nav]);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");

@@ -9,8 +9,8 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const nav = useNavigate();
-  const [email, setEmail] = useState("admin@easybill.in");
-  const [pass, setPass] = useState("admin123");
+  const [email, setEmail] = useState("Admin@easybill.in");
+  const [pass, setPass] = useState("admin12345");
   const [err, setErr] = useState("");
 
   const submit = async (e: React.FormEvent) => {
@@ -70,7 +70,7 @@ function LoginPage() {
           Sign in
         </button>
         <div className="eb-auth-foot">
-          <Link to="/forgot">Forgot password?</Link> · <Link to="/register">Create account</Link>
+          <Link to="/forgot">Forgot password?</Link>
         </div>
       </form>
     </div>

@@ -14,11 +14,29 @@ import expenseRoutes from "./routes/expenseRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import employeeRoutes from "./routes/employeeRoutes.js";
+import User from "./models/User.js";
 
 dotenv.config();
 
 // Connect to MongoDB
-connectDB();
+connectDB().then(async () => {
+  try {
+    const adminExists = await User.findOne({ email: "Admin@easybill.in" });
+    if (!adminExists) {
+      await User.create({
+        name: "Administrator",
+        email: "Admin@easybill.in",
+        password: "admin12345",
+        role: "admin",
+        mobile: "9999999999",
+        isActive: true,
+      });
+      console.log("Default admin seeded successfully.");
+    }
+  } catch (err) {
+    console.error("Error seeding default admin:", err.message);
+  }
+});
 
 const app = express();
 

@@ -13,9 +13,10 @@ type Customer = {
   phone: string;
   email: string;
   address: string;
+  password?: string;
 };
 
-const emptyCustomer = { _id: "", name: "", phone: "", email: "", address: "" };
+const emptyCustomer = { _id: "", name: "", phone: "", email: "", address: "", password: "" };
 
 function CustomersPage() {
   const [rows, setRows] = useState<Customer[]>([]);
@@ -209,22 +210,37 @@ function CustomerModal({
             </div>
             <div className="eb-form-grid">
               <div className="eb-form-row">
-                <label className="eb-label">Phone</label>
+                <label className="eb-label">Phone (Mobile Number)</label>
                 <input
                   className="eb-input"
+                  required
                   value={c.phone}
                   onChange={(e) => update("phone", e.target.value)}
+                  placeholder="Enter mobile number"
                 />
               </div>
               <div className="eb-form-row">
-                <label className="eb-label">Email</label>
+                <label className="eb-label">Email Address</label>
                 <input
                   className="eb-input"
                   type="email"
+                  required
                   value={c.email}
                   onChange={(e) => update("email", e.target.value)}
+                  placeholder="Enter email address"
                 />
               </div>
+            </div>
+            <div className="eb-form-row">
+              <label className="eb-label">Password {initial._id && "(Leave blank to keep current)"}</label>
+              <input
+                className="eb-input"
+                type="password"
+                required={!initial._id}
+                value={c.password || ""}
+                onChange={(e) => update("password", e.target.value)}
+                placeholder={initial._id ? "Enter new password if changing" : "Enter password"}
+              />
             </div>
             <div className="eb-form-row">
               <label className="eb-label">Address</label>
@@ -232,6 +248,7 @@ function CustomerModal({
                 className="eb-textarea"
                 value={c.address}
                 onChange={(e) => update("address", e.target.value)}
+                placeholder="Enter customer address"
               />
             </div>
           </div>

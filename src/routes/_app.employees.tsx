@@ -317,6 +317,7 @@ function EmployeesPage() {
                   <input 
                     className="eb-input" 
                     type="tel"
+                    required
                     value={mobile} 
                     onChange={e => setMobile(e.target.value)} 
                     placeholder="Enter mobile number"
